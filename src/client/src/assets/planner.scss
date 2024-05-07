@@ -1,0 +1,353 @@
+#plan {
+
+  .planner_left {
+    float: left;
+    width: 1000px;
+    max-width: 1000px;
+    margin-top: 30px;
+    border-radius: 40px;
+    padding: 30px 60px;
+    display: block;
+    height: 75vh;
+    box-shadow: 0 0 40px rgba($color: #000000, $alpha: .1);
+    position: relative;
+
+
+    .fc {
+      max-width: 780px;
+      margin: 0 auto;
+
+      .fc-daygrid-day-events {
+        font-size: 14px;
+      }
+
+      .fc-daygrid-event {
+        width: 12px;
+        height: 12px;
+        border-radius: 6px;
+        margin: 0 auto;
+        background: #66CCAA;
+        border: none;
+      }
+
+      .fc-day,
+      .fc-day-past,
+      .fc-daygrid-day {
+        max-height: 80px !important;
+      }
+
+      .fc-scrollgrid-sync-table tr {
+        max-height: 80px !important;
+      }
+
+      .fc-daygrid-day-frame,
+      .fc-scrollgrid-sync-inner {
+        max-height: 80px !important;
+      }
+
+      .fc-event-title.fc-sticky {
+        opacity: 0;
+      }
+
+      .fc-event-time {
+        display: none;
+      }
+
+      .fc-toolbar-title {
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      .fc-scroller {
+        overflow: hidden !important;
+      }
+
+      .fc-highlight {
+        background: #12b36b11;
+      }
+
+      .fc-daygrid-day.fc-day-today {
+        background-color: #fff;
+        color: #fff;
+
+        .fc-daygrid-day-top a {
+          display: block;
+          width: 30px;
+          height: 30px;
+          background: #66CCAA;
+          margin: 5px auto 0;
+          border-radius: 50%;
+        }
+
+        .fc-daygrid-day-top a span {
+          color: #fff;
+        }
+      }
+
+      .fc-scroller.fc-scroller-liquid-absolute {
+        overflow: hidden !important;
+      }
+
+      .fc-scrollgrid {
+        border: none;
+      }
+
+      .fc-col-header-cell-cushion {
+        width: 97%;
+        display: block;
+        margin: 0;
+      }
+
+      .fc-col-header-cell-cushion::after {
+        content: "";
+        display: block;
+        height: 10px;
+        border-radius: 5px;
+        background-color: #eee;
+      }
+
+      .fc-daygrid-day-top a {
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        margin-top: 4px;
+      }
+
+      .fc-day-sun {
+
+        a,
+        span {
+          color: #FF6666;
+        }
+
+        .fc-col-header-cell-cushion::after {
+          background-color: #FF6666;
+        }
+      }
+
+      .fc-day-sat {
+
+        a,
+        span {
+          color: #61AAF2;
+        }
+
+        .fc-col-header-cell-cushion::after {
+          background-color: #61AAF2;
+        }
+      }
+
+      .fc-scrollgrid-section-header {
+        .fc-day-sun {
+          color: #000000;
+        }
+
+        .fc-day-sat {
+          color: #000000;
+        }
+      }
+
+      .fc-button-primary {
+        background: none;
+        border: none;
+        color: #333;
+      }
+    }
+
+    .fc-theme-standard {
+      td {
+        border-color: #eee !important;
+        border-width: 0 0 1px;
+      }
+
+      tr:last-child>td {
+        border-width: 0 0 0;
+      }
+
+      th {
+        border-width: 0;
+      }
+    }
+
+    .popup {
+      border-radius: 40px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      z-index: 1;
+      padding: 40px 60px;
+
+      form {
+        position: absolute;
+        top: 100px;
+        left: 60px;
+        width: calc(100% - 120px);
+        height: calc(100% - 160px);
+
+        input[name='title'] {
+          border-bottom: 1px solid #3331;
+          width: 100%;
+          line-height: 40px;
+          margin: 0 0 60px;
+        }
+
+        input[name='startDate'],
+        input[name='endDate'] {
+          width: 50%;
+          margin: 0 0 10px;
+          text-align: center;
+          font-size: 40px;
+          font-weight: 100;
+        }
+
+        input[name='startTime'],
+        input[name='endTime'] {
+          width: 50%;
+          margin: 0;
+          text-align: center;
+          font-size: 40px;
+          font-weight: 100;
+        }
+
+      }
+
+      form::after {
+        content: "→";
+        font-size: 28px;
+        font-weight: 200;
+        display: block;
+        color: #333;
+        position: absolute;
+        text-align: center;
+        width: 100px;
+        left: calc(50% - 50px);
+        top: 112px;
+      }
+
+      .btnWrap {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+      }
+
+      button {
+        padding: 4px 12px;
+        color: #fff;
+        background: #66CCAA;
+        border: 1px solid #66CCAA;
+        border-radius: 8px;
+        margin-left: 8px;
+      }
+
+      button:hover {
+        opacity: 1;
+        box-shadow: 0 0 8px #66CCAA;
+      }
+
+      button.closeButton {
+        background: none;
+        border: none;
+        color: #333;
+        font-size: 36px;
+        font-weight: 100;
+        position: absolute;
+        top: 50px;
+        left: 40px;
+      }
+
+      button[type='button'] {
+        color: #bbb;
+        border: 1px solid #3331;
+        background: #fff;
+      }
+
+      button[type='button']:hover {
+        opacity: 1;
+        color: #fff;
+        background: #ddd;
+        box-shadow: none;
+      }
+
+    }
+
+  }
+
+  .planner_right {
+    float: right;
+    width: 360px;
+    max-width: 360px;
+    margin-top: 30px;
+    border-radius: 40px;
+    padding: 60px 40px;
+    display: block;
+    height: 75vh;
+    box-shadow: 0 0 40px #3331;
+
+
+  }
+
+
+
+
+
+
+  @media all and (max-width: 1480px) {
+
+    .planner_left {
+      width: 64%;
+      max-width: 1000px;
+    }
+
+    .planner_right {
+      width: 32%;
+      max-width: 1000px;
+    }
+  }
+
+  @media all and (max-width: 1080px) {
+    .planner_left {
+      float: none;
+      width: 100%;
+    }
+
+    .planner_right {
+      float: none;
+      display: none;
+      width: 100%;
+    }
+  }
+
+  @media all and (max-width: 800px) {
+    .planner_left {
+      width: 100%;
+    }
+
+    .planner_right {
+      width: 100%;
+    }
+  }
+
+  @media all and (max-width: 600px) {
+    .planner_left {
+      width: 100%;
+    }
+
+    .planner_right {
+      width: 100%;
+    }
+  }
+
+  @media all and (max-width: 400px) {
+    .planner_left {
+      width: 100%;
+    }
+
+    .planner_right {
+      width: 100%;
+    }
+  }
+}

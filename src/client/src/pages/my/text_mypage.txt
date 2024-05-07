@@ -1,0 +1,112 @@
+
+============================
+src.my.main
+============================
+
+main.My.js
+
+  - main.Profile.js
+        - navigate to `/my/profile`
+        - navigate to `/my/profile_img`
+          (my.profile.Update.js)
+          (my.profile.UpdateIMG.js)
+
+  - main.Team.js
+      - navigate to `/my/team`
+        (my.team.Detail.js)
+
+  - main.Bookmark.js
+    - main.Today.js
+    - main.Mate.js
+        - navigate to `/my/bookmark`
+          (my.bookmark.Detail.js)
+
+  - main.Board.js
+    - main.Today.js
+    - main.Mate.js
+        - navigate to `/my/board`
+          (my.board.Detail.js)
+
+
+
+============================
+src.my.profile
+============================
+
+profile.Update.js
+  - username
+  - password
+  - email
+  - nickname
+  - profile_message
+
+profile.UpdateIMG.js
+  - shape
+  - color
+  - eyes
+  - face
+
+
+
+============================
+src.my.team
+============================
+
+team.Detail.js
+      - navigate to `/team/{id}`
+        (team.TeamDetail.js)
+
+
+
+============================
+src.my.bookmark
+============================
+
+bookmark.Detail.js
+
+  bookmark.LikeBoard.js
+  - bookmark.Today.js
+  - bookmark.Mate.js
+      - navigate to `/today/{id}`
+      - navigate to `/mate/{id}`
+        (today.TadayDetail.js)
+        (mate.MateDetail.js)
+
+  bookmark.LikeComment.js
+  - bookmark.TodayComment.js
+  - bookmark.MateComment.js
+      - navigate to `/today/{id}`
+      - navigate to `/mate/{id}`
+        (today.TadayDetail.js)
+        (mate.MateDetail.js)
+
+  bookmark.Quest.js
+  - bookmark.Today.js
+      - navigate to `/today/{id}`
+        (today.TadayDetail.js)
+
+
+
+============================
+src.my.board
+============================
+
+board.Detail.js
+
+  board.Board.js
+  - board.Today.js
+  - board.Mate.js
+      - navigate to `/today/{id}`
+      - navigate to `/mate/{id}`
+        (today.TadayDetail.js)
+        (mate.MateDetail.js)
+
+  board.Comment.js
+  - board.TodayComment.js
+  - board.MateComment.js
+      - navigate to `/today/{id}`
+      - navigate to `/mate/{id}`
+        (today.TadayDetail.js)
+        (mate.MateDetail.js)
+
+

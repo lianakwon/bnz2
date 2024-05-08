@@ -24,14 +24,15 @@ profile
 =====
 team
 
+  ■ 관련 테이블 상태
   ■ team-member-user
+    many2many 관계인 team과 user를 연결해주는 역할 : member
   ■ team-member  -  team_id로 연결
   ■ user-member  -  user_id로 연결
   ■ 1 user    has  N member(team)
   ■ 1 team    has  N member(user)
   ■ 1 member  is   1 user, 1 team
 
-  ■ 관련 테이블 상태
   user    id (pk)
           nickname
 
@@ -58,7 +59,7 @@ team
   FROM    team T
   JOIN    member M    ON   T.id = M.team_id             // 멤버-팀 테이블 조인
   JOIN    user U      ON   U.id = M.user_id             // 유저-멤버 테이블 조인
-  WHERE   T.id        IN   (  SELECT  team_id           // 내가 소속된 팀과 동일한 팀의...
+  WHERE   T.id        IN   (  SELECT  team_id           // 내가 소속된 팀과 동일한 팀의
                               FROM    member
                               WHERE   user_id = ${id}  )
   ■ 멤버 정보 조회 2

@@ -1,270 +1,173 @@
-==============================
-we.cod.bnz.config : 환경설정
-==============================
+====
+SQL문
 
-Rest Template Config
-Security Config
-Web Config
-Web Socket Config
-
-==============================
-we.cod.bnz.account : 계정
-==============================
-
-Account
-Account DTO
-Account Service
-Account Controller
-Account Repository
-Account Role : 계정 권한 세팅
-
-.dto
-Join DTO : 회원가입
-Login DTO : 로그인
-Profile DTO : 프로필
-Password DTO : 패스워드
-
-.exception
-Account Exception
-Account Exception Type
-Base Exception
-Base Exception Type
-Exception Handler
-
-.my
-My Controller
-My Service
-
-==============================
-we.cod.bnz.oauth
-==============================
-
-.cookie
-Cookie Utils
-Cookie Repository
-
-.exception
-OAuth Auth Exception
-
-.handler
-OAuth Failure Handler
-OAuth Success Handler
-
-.service
-Custom OAuth Service
-OAuth Principal
-
-.user
-Oauth / Unlinked
-Google Oauth / Unlinked
-Kakao Oauth / Unlinked
-Naver Oauth / Unlinked
-Oauth Factory
-Oauth Provider
-Unlinked Manager
-
-==============================
-we.cod.bnz.member : 팀 참여자
-==============================
-
-Member
-Member DTO
-Member Request DTO
-Member Service
-Member Controller
-Member Repository
-
-Member Pre : 팀 예비 참여자
-Member Pre Repository
-
-Member Role : 팀 참여자 권한
-
-==============================
-we.cod.bnz.team : 팀 + 팀 채팅
-==============================
-
-Team
-Team DTO
-Team Service
-Team Controller
-Team Repository
-
-Message Team
-Message Team DTO
-Message Team Service
-Message Team Controller
-Message Team Repository
-
-==============================
-we.cod.bnz.talk : 1:1 채팅
-==============================
-
-Talk
-Talk DTO
-Talk Service
-Talk Controller
-Talk Repository
-
-Message Talk
-Message Talk DTO
-Message Talk Service
-Message Talk Controller
-Message Talk Repository
-
-==============================
-we.cod.bnz.mate : 팀 모집 게시판
-==============================
-
-Mate
-Mate DTO
-Mate Service
-Mate Controller
-Mate Repository
-
-Tag
-Tag DTO
-Tag Service
-Tag Controller
-Tag Repository
-
-Comment Mate
-Comment Mate DTO
-Comment Mate Service
-Comment Mate Controller
-Comment Mate Repository
+  ■ MySQL
+  ■ port     : localhost:3306
+  ■ schema   : bnz
+  ■ username : root
+  ■ password : 1234
 
 
 
 
+=====
+profile
+
+  ■ 유저 정보 조회
+  SELECT *
+  FROM account
+  WHERE id = ${id}
 
 
-==============================
-Account
-==============================
 
-조회 - get Account
-생성 - create Account
-삭제 - delete Account
-수정(게정정보) - update Account
-수정(프로파일) - update Profile
-수정(비밀번호) - update Password
-로그인 - login
-로그아웃 - logout
 
-==============================
-My
-==============================
+=====
+team
 
-.profile
-조회 - get Profile
-수정 = update Profile
+  ■ team-member-user
+  ■ team-member  -  team_id로 연결
+  ■ user-member  -  user_id로 연결
+  ■ 1 user    has  N member(team)
+  ■ 1 team    has  N member(user)
+  ■ 1 member  is   1 user, 1 team
 
-.team
-조회 - get My Team
-수정 - update My Team
+  ■ 관련 테이블 상태
+  user    id (pk)
+          nickname
 
-.member
-조회 - get My Member
-수정 - update My Member
+  team    id (pk)
+          title
 
-.mate
-조회 - get My Mate
-수정 - update My Mate
+  member  id (pk)
+          user_id   ( fk === join with user )
+          team_id   ( fk === join with team )
 
-.tag
-조회 - get My Tag
-수정 - update My Tag
+  ■ 팀 정보 조회
+  SELECT  T.id,
+          T.title,
+  FROM    team T, member M, user U
+  WHERE   1 = 1
+  AND     M.team_id = T.id
+  AND     U.id = M.user_id
+  AND     M.user_id = ${id}
 
-.comment_mate
-조회 - get My Comment Mate
-수정 - update My Comment Mate
+  ■ 멤버 정보 조회 1
+  SELECT  T.id        AS id,                            // 팀 아이디
+          T.title     AS title,                         // 팀명
+          U.nickname  AS member_name                    // 팀 멤버의 닉네임
+  FROM    team T
+  JOIN    member M    ON   T.id = M.team_id             // 멤버-팀 테이블 조인
+  JOIN    user U      ON   U.id = M.user_id             // 유저-멤버 테이블 조인
+  WHERE   T.id        IN   (  SELECT  team_id           // 내가 소속된 팀과 동일한 팀의...
+                              FROM    member
+                              WHERE   user_id = ${id}  )
+  ■ 멤버 정보 조회 2
+  SELECT  *
+  FROM    user U, team T, member M
+  WHERE   1 = 1
+  AND     M.user_id = #{id}
+  AND     M.team_id = T.id
+  AND     U.id = (  SELECT  user_id
+                    FROM    member
+                    WHERE   team_id = T.id  )
 
-.today
-조회 - get My Today
-수정 - update My Today
 
-.comment_today
-조회 - get My Comment Today
-수정 - update My Comment Today
 
-==============================
-Oauth
-==============================
 
-성공 OAuth Success Handler
-실패 OAuth Failure Handler
+=====
+board
 
-==============================
-Mate / Tag / CommentMate
-==============================
+  ■ 관련 테이블 상태
+  user    id (pk)
+          nickname
 
-.mate
-조회 - get My Mate
-수정 - update My Mate
+  board   id (pk)
+          title
+          content
+          author_id   ( fk === join with user )
 
-.tag
-조회 - get My Tag
-수정 - update My Tag
+  comment id (pk)
+          writer_id   ( fk === join with user )
+          board_id    ( fk === join with board )
 
-.commentMate
-조회 - get My Comment Mate
-수정 - update My Comment Mate
+  ■ 내가 작성한 게시글 조회
+  ■ 특정 user.nickname & 특정 user.게시글(board)의 id, title, content
+  SELECT  B.id,                                     // 게시글의 아이디
+          B.title,                                  // 게시글의 제목
+          B.content,                                // 게시글의 내용
+          U.nickname      AS  author                // 게시글 작성자의 닉네임
+  FROM    board B, user U
+  JOIN    user U          ON  U.id = B.author_id    // 게시글 작성자와 동일한 유저 아이디
+  WHERE   B.author_id = ${id}                       // 게시글 작성자의 아이디는 외부 주입
 
-==============================
-Today / CommentToday
-==============================
+  ■ 내가 작성한 댓글 조회
+  ■ 특정 user.nickname & 특정 user.댓글(comment)의 content
+  ■ 특정 user.댓글(comment).게시글(board)의 id, title
+  SELECT  B.id,                                     // 댓글이 달린 게시글의 아이디
+          B.title,                                  // 댓글이 달린 게시글의 제목
+          C.content     AS comment,                 // 댓글 내용
+          U.nickname    AS writer                   // 댓글 작성자의 닉네임
+  FROM    board B
+  JOIN    comment C     ON B.id = C.board_id        // 댓글이 달린 게시글과 동일한 게시글
+  JOIN    user U        ON U.id = C.writer_id       // 댓글 작성자와 동일한 유저
+  WHERE   C.writer_id = ${id}                       // 댓글 작성자의 아이디는 외부 주입
 
-.today
-조회 - get My Today
-수정 - update My Today
 
-.commentToday
-조회 - get My Comment Today
-수정 - update My Comment Today
 
-==============================
-Talk
-==============================
 
-조회 - get Talks
-생성 - create Talk
-삭제 - delete Talk
+=====
+bookmark
 
-==============================
-Message Talk
-==============================
+  ■ 관련 테이블 상태
+  user              id (pk)
+                    nickname
 
-조회 - get messages Talk
-생성 - create message Talk
-삭제 - delete message Talk
+  board             id (pk)
+                    title
+                    content
+                    author_id     ( fk === join with user )
 
-==============================
-Team
-==============================
+  comment           id (pk)
+                    writer_id     ( fk === join with user )
+                    board_id      ( fk === join with board )
 
-조회 - get Teams
-생성 - create Team
-수정 - update Team
-삭제 - delete Team
+  board_bookmark    board_id      ( fk === join with board )
+                    user_id       ( fk === join with user )
 
-==============================
-Message Team
-==============================
+  comment_bookmark  comment_id    ( fk === join with comment )
+                    user_id       ( fk === join with user )
 
-조회 - get all messages Team
-생성 - create message Team
-삭제 - delete message Team
 
-==============================
-Member
-==============================
+  ■ 내가 북마크한 게시글 조회
+  ■ 특정 user.nickname & 특정 user.북마크(board_bookmark).게시글(board)의 id, title
+  SELECT  B.id,                                                 // 게시글 아이디
+          B.title,                                              // 게시글 제목
+          U.nickname          AS  author                        // 게시글 작성자의 닉네임
+  FROM    board B
+  JOIN    user U              ON  U.id = C.author_id            // 게시글 & 유저 조인
+  WHERE   B.id                IN  ( SELECT  board_id            // 내가 북마크 한 게시글의 ID
+                                    FROM    board_bookmark
+                                    WHERE   user_id     IN   ${id}  )
 
-조회 - get Members
-초대 - Put in Team
-초대수락 - Get in Team
-초대거절 - Get in Team not
-탈퇴 - Get out Team
-강퇴 - Put out Team
+  ■ 내가 북마크한 댓글 조회
+  ■ 특정 user.nickname & 특정 user.댓글(comment)의 content
+  ■ 특정 user.댓글(comment).게시글(board)의 id, title
+  SELECT  B.id,                                                 // 댓글이 달린 게시글의 아이디
+          B.title,                                              // 댓글이 달린 게시글의 제목
+          C.content     AS comment,                             // 댓글 내용
+          U.nickname    AS writer                               // 댓글 작성자의 닉네임
+  FROM    board B
+  JOIN    comment C     ON B.id = C.board_id                    // 댓글이 달린 게시글과 동일한 게시글
+  JOIN    user U        ON U.id = C.writer_id                   // 댓글 작성자와 동일한 유저
+  WHERE   C.id                IN  ( SELECT  comment_id          // 내가 북마크 한 댓글의 ID
+                                    FROM    comment_bookmark
+                                    WHERE   user_id     IN   ${id}  )
+
+
+
+
+=
+
 
 
 

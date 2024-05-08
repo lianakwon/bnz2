@@ -77,7 +77,7 @@ const Join_2 = () => {
   const checkUsername = async (e) => {
     e.preventDefault();
     console.log(username);
-    await axios.post("http://localhost:8080/account/check", username)
+    await axios.post("http://localhost:8080/account/check", {username})
       .then(response => {
         console.log(response);
         console.log("id check success");

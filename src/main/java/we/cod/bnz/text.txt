@@ -1,11 +1,4 @@
-====
-■ MySQL
-■ port     : localhost:3306
-■ schema   : bnz
-■ username : root
-■ password : 1234
-
-
+===== MySQL
 
 ===== 작은 게시판형 샘플 사이트의 엔티티만 모은 샘플 폴더
       특정 유저와 관련된 정보를 모아서 보는 마이페이지 제작 중

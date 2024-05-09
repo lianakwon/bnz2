@@ -1,28 +1,29 @@
 ===== MySQL
 
 ===== 작은 게시판형 샘플 사이트의 엔티티만 모은 샘플 폴더
-      특정 유저와 관련된 정보를 모아서 보는 마이페이지 제작 중
+      특정 유저 (=${id}) 와 관련된 정보를 모아서 보는 마이페이지 제작 중
 
 ===== profile
-      1. 특정 유저의 프로필 정보 확인
+      1. 특정 유저의 프로필 정보 조회
 ===== team
-      2. 특정 유저가 소속된 팀 정보 확인
-      3. 특정 유저가 소속된 팀의 모든 멤버 정보 확인
+      2. 특정 유저가 소속된 팀 정보 조회
+      3. 특정 유저가 소속된 팀의 모든 멤버 정보 조회 ★★★
 ===== board
-      4. 특정 유저가 작성한 게시글 정보 확인
-      5. 특정 유저가 작성한 댓글 정보 확인
+      4. 특정 유저가 작성한 게시글 정보 조회 ★
+      5. 특정 유저가 작성한 댓글 정보 조회 ★
 ===== bookmark
-      6. 특정 유저가 북마크한 게시글 정보 확인
-      7. 특정 유저가 북마크한 댓글 정보 확인
+      6. 특정 유저가 북마크한 게시글 정보 조회 ★★★
+      7. 특정 유저가 북마크한 댓글 정보 조회 ★★★
       
-      위 일곱가지 기능을 구현하기 위한 SQL문 작성해 보았습니다.
+      위 일곱 기능을 구현하기 위한 SQL문 작성해 보았습니다.
+	(★를 많이 봐주세요……ㅠㅠ)
 
 
 
 
 ===== profile
     
-      ■ 1) 유저 정보 조회
+      1) 유저 정보 조회
       SELECT   *
       FROM     account
       WHERE    id = ${id}
@@ -32,12 +33,12 @@
 
 ===== team
     
-      ■ 관련 테이블
-      ■ team-member-user
-        many2many 관계인 team과 user를 연결해주는 역할 : member
-      ■ 1 user    has  N member(team)
-      ■ 1 team    has  N member(user)
-      ■ 1 member  is   1 user, 1 team
+      ■■ 관련 테이블
+         team-member-user
+         many2many 관계인 team과 user를 연결해주는 역할 : member
+      ■■ 1 user    has  N member(team)
+         1 team    has  N member(user)
+         1 member  is   1 user, 1 team
     
       user    id (pk)
               nickname
@@ -49,7 +50,7 @@
               user_id   ( fk === join with user )
               team_id   ( fk === join with team )
     
-      ■ 2) 팀 정보 조회
+      2) 팀 정보 조회
       SELECT  T.id,
               T.title,
       FROM    team T, member M, user U
@@ -58,17 +59,18 @@
       AND     U.id = M.user_id
       AND     M.user_id = ${id}
     
-      ■ 3_1) 멤버 정보 조회
+      3_1) 멤버 정보 조회 1
+           3_1과 3_2 중 어느 것이 더 효율적인지 궁금합니다
       SELECT  T.id        AS id,                            // 팀 아이디
               T.title     AS title,                         // 팀명
               U.nickname  AS member_name                    // 팀 멤버의 닉네임
       FROM    team T
       JOIN    member M    ON   T.id = M.team_id             // 멤버-팀 테이블 조인
       JOIN    user U      ON   U.id = M.user_id             // 유저-멤버 테이블 조인
-      WHERE   T.id        IN   ( SELECT  team_id            // 내가 소속된 팀과 동일한 팀의
+      WHERE   T.id        IN   ( SELECT  team_id            // 내가 소속된 팀의
                                 FROM    member
                                 WHERE   user_id = ${id} )
-      ■ 3_2) 멤버 정보 조회
+      3_2) 멤버 정보 조회 2
       SELECT  *
       FROM    user U, team T, member M
       WHERE   1 = 1
@@ -83,7 +85,7 @@
 
 ===== board
     
-      ■ 관련 테이블 상태
+      ■■ 관련 테이블
       user    id (pk)
               nickname
     
@@ -96,8 +98,8 @@
               writer_id   ( fk === join with user )
               board_id    ( fk === join with board )
     
-      ■ 4) 내가 작성한 게시글 조회
-      ■    특정 user.nickname & 특정 user.게시글(board)의 id, title, content
+      4) 내가 작성한 게시글 조회
+         특정 user.nickname & 특정 user.board.id, title, content
       SELECT  B.id,                                     // 게시글의 아이디
               B.title,                                  // 게시글의 제목
               B.content,                                // 게시글의 내용
@@ -106,9 +108,8 @@
       JOIN    user U          ON  U.id = B.author_id    // 게시글 작성자와 동일한 유저 아이디
       WHERE   B.author_id = ${id}                       // 게시글 작성자의 아이디는 외부 주입
     
-      ■ 5) 내가 작성한 댓글 조회
-      ■    특정 user.nickname & 특정 user.댓글(comment)의 content
-      ■    특정 user.댓글(comment).게시글(board)의 id, title
+      5) 내가 작성한 댓글 조회
+         특정 user.nickname & 특정 user.comment.content & 특정 user.comment.board.id, title
       SELECT  B.id,                                     // 댓글이 달린 게시글의 아이디
               B.title,                                  // 댓글이 달린 게시글의 제목
               C.content     AS comment,                 // 댓글 내용
@@ -123,7 +124,7 @@
 
 ===== bookmark
     
-      ■ 관련 테이블 상태
+      ■■ 관련 테이블
       user              id (pk)
                         nickname
     
@@ -142,8 +143,8 @@
       comment_bookmark  comment_id    ( fk === join with comment )
                         user_id       ( fk === join with user )
     
-      ■ 6) 내가 북마크한 게시글 조회
-      ■    특정 user.nickname & 특정 user.북마크(board_bookmark).게시글(board)의 id, title
+      6) 내가 북마크한 게시글 조회
+         특정 user.nickname & 특정 user.board_bookmark.board.id, title
       SELECT  B.id,                                                 // 게시글 아이디
               B.title,                                              // 게시글 제목
               U.nickname          AS  author                        // 게시글 작성자의 닉네임
@@ -153,9 +154,8 @@
                                         FROM    board_bookmark
                                         WHERE   user_id     IN   ${id}  )
     
-      ■ 7) 내가 북마크한 댓글 조회
-      ■    특정 user.nickname & 특정 user.댓글(comment)의 content
-      ■    특정 user.댓글(comment).게시글(board)의 id, title
+      7) 내가 북마크한 댓글 조회
+         특정 user.nickname & 특정 user.comment.content & 특정 user.comment.board.id, title
       SELECT  B.id,                                                 // 댓글이 달린 게시글의 아이디
               B.title,                                              // 댓글이 달린 게시글의 제목
               C.content     AS comment,                             // 댓글 내용

@@ -60,7 +60,6 @@
       AND     M.user_id = ${id}
     
       3_1) 멤버 정보 조회 1
-           3_1과 3_2 중 어느 것이 더 효율적인지 궁금합니다
       SELECT  T.id        AS id,                            // 팀 아이디
               T.title     AS title,                         // 팀명
               U.nickname  AS member_name                    // 팀 멤버의 닉네임
@@ -71,6 +70,7 @@
                                 FROM    member
                                 WHERE   user_id = ${id} )
       3_2) 멤버 정보 조회 2
+           요거 실행하면 아무것도 안 뜨는데 어느 부분이 오류인지 궁금합니다. ㅠㅠ
       SELECT  *
       FROM    user U, team T, member M
       WHERE   1 = 1
@@ -99,17 +99,17 @@
               board_id    ( fk === join with board )
     
       4) 내가 작성한 게시글 조회
-         특정 user.nickname & 특정 user.board.id, title, content
+         user.nickname & user.board.id, title, content
       SELECT  B.id,                                     // 게시글의 아이디
               B.title,                                  // 게시글의 제목
               B.content,                                // 게시글의 내용
               U.nickname      AS  author                // 게시글 작성자의 닉네임
-      FROM    board B, user U
+      FROM    board B
       JOIN    user U          ON  U.id = B.author_id    // 게시글 작성자와 동일한 유저 아이디
       WHERE   B.author_id = ${id}                       // 게시글 작성자의 아이디는 외부 주입
     
       5) 내가 작성한 댓글 조회
-         특정 user.nickname & 특정 user.comment.content & 특정 user.comment.board.id, title
+         user.nickname & user.comment.content & user.comment.board.id, title
       SELECT  B.id,                                     // 댓글이 달린 게시글의 아이디
               B.title,                                  // 댓글이 달린 게시글의 제목
               C.content     AS comment,                 // 댓글 내용
@@ -144,7 +144,7 @@
                         user_id       ( fk === join with user )
     
       6) 내가 북마크한 게시글 조회
-         특정 user.nickname & 특정 user.board_bookmark.board.id, title
+         user.nickname & user.board_bookmark.board.id, title
       SELECT  B.id,                                                 // 게시글 아이디
               B.title,                                              // 게시글 제목
               U.nickname          AS  author                        // 게시글 작성자의 닉네임
@@ -152,10 +152,10 @@
       JOIN    user U              ON  U.id = C.author_id            // 게시글 & 유저 조인
       WHERE   B.id                IN  ( SELECT  board_id            // 내가 북마크 한 게시글의 ID
                                         FROM    board_bookmark
-                                        WHERE   user_id     IN   ${id}  )
+                                        WHERE   user_id = ${id}  )
     
       7) 내가 북마크한 댓글 조회
-         특정 user.nickname & 특정 user.comment.content & 특정 user.comment.board.id, title
+         user.nickname & user.comment.content & user.comment.board.id, title
       SELECT  B.id,                                                 // 댓글이 달린 게시글의 아이디
               B.title,                                              // 댓글이 달린 게시글의 제목
               C.content     AS comment,                             // 댓글 내용
@@ -165,4 +165,4 @@
       JOIN    user U        ON U.id = C.writer_id                   // 댓글 작성자와 동일한 유저
       WHERE   C.id                IN  ( SELECT  comment_id          // 내가 북마크 한 댓글의 ID
                                         FROM    comment_bookmark
-                                        WHERE   user_id     IN   ${id}  )
+                                        WHERE   user_id = ${id}  )

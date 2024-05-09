@@ -35,7 +35,7 @@ AND     M.user_id = 1;
 -- 3_1
 SELECT  T.id		AS id,
 	T.title		AS title,
-	U.nickname	AS member_name
+	U.nickname	AS member
 FROM    team T
 JOIN    member M	ON T.id = M.team_id
 JOIN    user U		ON U.id = M.user_id
@@ -44,7 +44,9 @@ WHERE   T.id    	IN (	SELECT  team_id
 				WHERE   user_id = 1 );
 
 -- 3_2
-SELECT  *
+SELECT  T.id		AS id,
+	T.title		AS title,
+	U.nickname	AS member
 FROM    user U, team T, member M
 WHERE   1 = 1
 AND     M.user_id = 1

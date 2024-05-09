@@ -24,9 +24,9 @@
 ===== profile
     
       1) 유저 정보 조회
-      SELECT   *
-      FROM     account
-      WHERE    id = ${id}
+      SELECT *
+      FROM user
+      WHERE id = ${id};
 
 
 
@@ -52,12 +52,12 @@
     
       2) 팀 정보 조회
       SELECT  T.id,
-              T.title,
-      FROM    team T, member M, user U
+      	  T.title
+      FROM    team T,	member M, user U
       WHERE   1 = 1
       AND     M.team_id = T.id
       AND     U.id = M.user_id
-      AND     M.user_id = ${id}
+      AND     M.user_id = 1;
     
       3_1) 멤버 정보 조회 1
       SELECT  T.id        AS id,                            // 팀 아이디

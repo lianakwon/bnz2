@@ -25,25 +25,23 @@ WHERE id = 2;
 
 -- 2
 SELECT  T.id,
-		T.title
-FROM    team T,
-		member M,
-        user U
+	T.title
+FROM    team T,	member M, user U
 WHERE   1 = 1
 AND     M.team_id = T.id
 AND     U.id = M.user_id
 AND     M.user_id = 1;
 
 -- 3_1
-SELECT  T.id        AS id,
-		T.title     AS title,
-		U.nickname  AS member_name
+SELECT  T.id		AS id,
+	T.title		AS title,
+	U.nickname	AS member_name
 FROM    team T
-JOIN    member M    ON T.id = M.team_id
-JOIN    user U      ON U.id = M.user_id
-WHERE   T.id        IN ( SELECT  team_id
-						 FROM    member
-						 WHERE   user_id = 1 );
+JOIN    member M	ON T.id = M.team_id
+JOIN    user U		ON U.id = M.user_id
+WHERE   T.id    	IN (	SELECT  team_id
+				FROM    member
+				WHERE   user_id = 1 );
 
 -- 3_2
 SELECT  *
@@ -51,39 +49,39 @@ FROM    user U, team T, member M
 WHERE   1 = 1
 AND     M.user_id = 1
 AND     M.team_id = T.id
-AND     U.id = ( SELECT  user_id
-				 FROM    member
-				 WHERE   team_id = T.id );
+AND     U.id = (	SELECT  user_id
+			FROM    member
+			WHERE   team_id = T.id );
 
 -- 4
 SELECT  B.id,
-	    B.title,
-	    B.content,
-	    U.nickname      AS  author
+	B.title,
+	B.content,
+	U.nickname	AS  author
 FROM    board B
-JOIN    user U          ON  U.id = B.author_id
+JOIN    user U		ON  U.id = B.author_id
 WHERE   B.author_id = 1;
 
 -- 5
 SELECT  B.id,
-	    B.title,
-	    B.content,
-	    C.content     AS comment,
-	    U.nickname    AS writer
+	B.title,
+	B.content,
+	C.content	AS comment,
+	U.nickname	AS writer
 FROM    board B
-JOIN    comment C     ON B.id = C.board_id
-JOIN    user U        ON U.id = C.writer_id
+JOIN    comment C	ON B.id = C.board_id
+JOIN    user U		ON U.id = C.writer_id
 WHERE   C.writer_id = 3;
 
 -- 6
 SELECT  B.id,
-		B.title,
-		U.nickname          AS  author
+	B.title,
+	U.nickname	AS  author
 FROM    board B
-JOIN    user U              ON U.id = B.author_id
-WHERE   B.id                IN ( SELECT  board_id
-								 FROM    board_bookmark
-								 WHERE   user_id = 9 );
+JOIN    user U		ON U.id = B.author_id
+WHERE   B.id		IN ( 	SELECT  board_id
+				FROM    board_bookmark
+				WHERE   user_id = 9 );
 
 -- 7
   SELECT  B.id,
@@ -93,9 +91,9 @@ WHERE   B.id                IN ( SELECT  board_id
   FROM    board B
   JOIN    comment C     ON B.id = C.board_id
   JOIN    user U        ON U.id = C.writer_id
-  WHERE   C.id                IN  ( SELECT  comment_id
-                                    FROM    comment_bookmark
-                                    WHERE   user_id = 4 )
+  WHERE   C.id		IN  ( 	SELECT  comment_id
+	                        FROM    comment_bookmark
+	                        WHERE   user_id = 4 )
 
 
 
